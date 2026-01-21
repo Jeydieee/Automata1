@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>States Against Spam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shield-alt"></i> States Against Spam</h1>
+            <p>Finite Automata Approach to Message Filtering</p>
+        </header>
+
+        <main class="dashboard">
+            <section class="input-panel">
+                <div class="card">
+                    <h2>Message Scanner</h2>
+                    <textarea id="messageInput" placeholder="Type a message to scan (e.g., 'Click here to win a free promo')..."></textarea>
+                    <button onclick="scanMessage()" id="scanBtn">Analyze Message</button>
+                </div>
+
+                <div class="card" id="resultCard" style="display:none;">
+                    <h2>Analysis Result</h2>
+                    <div id="resultBadge" class="badge">Processing...</div>
+                    <div class="stats">
+                        <p><strong>Keywords Found:</strong> <span id="keywordsFound">-</span></p>
+                        <p><strong>Heuristic Score:</strong> <span id="riskScore">0</span>%</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="viz-panel">
+                <div class="card">
+                    <h2>Finite Automata State Transitions</h2>
+                    <div class="automata-viz" id="automataLog">
+                        <p class="placeholder-text">Scan a message to see the state machine in action.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Recent Detections (Database)</h2>
+                    <ul id="historyList">
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
