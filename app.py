@@ -16,7 +16,7 @@ database.init_db()
 
 # --- API CONFIGURATION ---
 # PASTE YOUR LONG CODE INSIDE THE QUOTES BELOW:
-VIRUSTOTAL_API_KEY = "2798da73429d2f69f08cafc67aa4fd9e6871758bebfa33751241368cc3984eab" 
+VIRUSTOTAL_API_KEY = "2798da73429d2f69f08cafc67aa4fd9e6871758bebfa33751241368cc3984eab"
 
 def extract_urls(text):
     """Finds all URLs in a message using Regex."""
@@ -30,9 +30,9 @@ def check_url_api(url):
     """
     # 1. DEMO MODE: Immediate triggers for your presentation (Works without Internet)
     demo_blocklist = [
-        "malicious.com", 
-        "phishing-login.com", 
-        "free-money-now.net", 
+        "malicious.com",
+        "phishing-login.com",
+        "free-money-now.net",
         "claim-prize.xyz"
     ]
     
@@ -74,9 +74,9 @@ def heuristic_score(text):
     """Calculates a suspiciousness score based on non-keyword features."""
     score = 0
     if len(text) > 0 and sum(1 for c in text if c.isupper()) / (len(text) + 1) > 0.4:
-        score += 30 
+        score += 30
     if text.count('!') > 2:
-        score += 20 
+        score += 20
     if '$' in text:
         score += 50
     return min(score, 100)
