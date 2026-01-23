@@ -1,17 +1,45 @@
 # automata.py
+import os
 
 class FiniteAutomata:
-    def __init__(self):
+    def __init__(self, keyword_file="spam_keywords.txt"):
         # State 0 is the start state
         self.transitions = {}  # Format: { (state, char): next_state }
         self.output = {}       # Format: { state: "keyword_found" }
         self.fail = {}         # Failure links (for Aho-Corasick optimization)
         self.state_counter = 0
-        self.spam_keywords = ["win", "free", "promo", "claim now", "urgent", "winner", "click here"]
+        
+        # Load keywords from the external file
+        self.spam_keywords = self.load_keywords(keyword_file)
+        
         self.build_automata()
+
+    def load_keywords(self, filepath):
+        """Reads spam keywords from a text file, one per line."""
+        keywords = []
+        try:
+            # check if file exists to avoid crashing
+            if os.path.exists(filepath):
+                with open(filepath, "r", encoding="utf-8") as f:
+                    for line in f:
+                        # strip() removes newline characters and surrounding whitespace
+                        clean_word = line.strip().lower() 
+                        if clean_word:  # Ensure empty lines are ignored
+                            keywords.append(clean_word)
+            else:
+                print(f"Warning: '{filepath}' not found. Using default keywords.")
+                # Fallback defaults if file is missing
+                return ["win", "free", "promo", "claim now", "urgent"]
+                
+        except Exception as e:
+            print(f"Error reading keyword file: {e}")
+            return []
+            
+        return keywords
 
     def build_automata(self):
         """Constructs the Trie-based Finite Automata from keywords."""
+        # ... (Rest of your existing build_automata code remains the same) ...
         self.transitions = {}
         self.output = {}
         self.state_counter = 0
@@ -50,7 +78,7 @@ class FiniteAutomata:
                 # If no transition, reset to start (Simplified DFA behavior)
                 # In full Aho-Corasick, we would follow failure links
                 if (0, char) in self.transitions:
-                     current_state = self.transitions[(0, char)]
+                    current_state = self.transitions[(0, char)]
                 else:
                     current_state = 0
                 status = "Reset"
@@ -61,7 +89,7 @@ class FiniteAutomata:
                 detected_patterns.append(keyword)
                 status = f"MATCH: {keyword}"
                 # Reset after match to find next word
-                current_state = 0 
+                current_state = 0
 
             transition_log.append({
                 "char": char,

@@ -106,7 +106,7 @@ def analyze():
     is_spam = False
     classification = "Legitimate (Ham)"
     
-    if patterns or h_score > 20:
+    if patterns or h_score >= 70:
         is_spam = True
         classification = "SPAM DETECTED"
     
