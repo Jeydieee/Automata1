@@ -14,7 +14,7 @@
             <p>Finite Automata Approach to Message Filtering</p>
         </header>
 
-        <main class="dashboard">
+        <main class="dashboard" style="display: block; max-width: 800px; margin: 0 auto;"> 
             <section class="input-panel">
                 <div class="card">
                     <h2>Message Scanner</h2>
@@ -29,21 +29,12 @@
                         <p><strong>Keywords Found:</strong> <span id="keywordsFound">-</span></p>
                         <p><strong>Heuristic Score:</strong> <span id="riskScore">0</span></p>
                     </div>
-                </div>
-            </section>
-
-            <section class="viz-panel">
-                <div class="card">
-                    <h2>Finite Automata State Transitions</h2>
-                    <div class="automata-viz" id="automataLog">
-                        <p class="placeholder-text">Scan a message to see the state machine in action.</p>
+                    
+                    <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                        <button onclick="window.location.href='/advanced'" style="background-color: #1F2937;">
+                            <i class="fas fa-chart-network"></i> View Advanced Results
+                        </button>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h2>Recent Detections (Database)</h2>
-                    <ul id="historyList">
-                    </ul>
                 </div>
             </section>
         </main>

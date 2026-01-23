@@ -47,6 +47,7 @@ header {
 
 textarea {
     width: 100%;
+    box-sizing: border-box; /* Added to fix overflow */
     height: 120px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -70,6 +71,24 @@ button {
 
     button:hover {
         background-color: #4338ca;
+    }
+
+/* New class for the Back Button */
+.btn-back {
+    display: inline-block;
+    background-color: var(--dark);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: bold;
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    .btn-back:hover {
+        opacity: 0.9;
     }
 
 .badge {

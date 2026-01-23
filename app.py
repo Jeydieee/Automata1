@@ -3,10 +3,10 @@ from automata import FiniteAutomata
 import database
 import webbrowser
 from threading import Timer
-import re # Used for finding URLs
-import requests # Used for the API
+import re 
+import requests 
 import os
-import base64 # Needed for VirusTotal encoding
+import base64 
 
 app = Flask(__name__)
 fa_engine = FiniteAutomata()
@@ -15,7 +15,6 @@ fa_engine = FiniteAutomata()
 database.init_db()
 
 # --- API CONFIGURATION ---
-# PASTE YOUR LONG CODE INSIDE THE QUOTES BELOW:
 VIRUSTOTAL_API_KEY = "2798da73429d2f69f08cafc67aa4fd9e6871758bebfa33751241368cc3984eab"
 
 def extract_urls(text):
@@ -28,7 +27,7 @@ def check_url_api(url):
     Checks a URL against a Demo Blocklist AND the VirusTotal API.
     Returns: (is_malicious, reason)
     """
-    # 1. DEMO MODE: Immediate triggers for your presentation (Works without Internet)
+    # 1. DEMO MODE
     demo_blocklist = [
         "malicious.com",
         "phishing-login.com",
@@ -40,23 +39,17 @@ def check_url_api(url):
         if bad_site in url:
             return True, f"Known Malicious Site ({bad_site})"
 
-    # 2. REAL API MODE: VirusTotal (Requires Internet)
+    # 2. REAL API MODE
     if VIRUSTOTAL_API_KEY:
         try:
-            print(f"Scanning URL via VirusTotal: {url}...") # Log to terminal
+            print(f"Scanning URL via VirusTotal: {url}...")
             headers = {"x-apikey": VIRUSTOTAL_API_KEY}
-            
-            # VirusTotal requires the URL to be Base64 Encoded
             url_id = base64.urlsafe_b64encode(url.encode()).decode().strip("=")
-            
-            # Send request to VirusTotal
             response = requests.get(f"https://www.virustotal.com/api/v3/urls/{url_id}", headers=headers)
             
             if response.status_code == 200:
                 data = response.json()
                 stats = data['data']['attributes']['last_analysis_stats']
-                
-                # Check if any security vendor flagged it as malicious
                 malicious_count = stats.get('malicious', 0)
                 if malicious_count > 0:
                     return True, f"Flagged by {malicious_count} Security Vendors (VirusTotal)"
@@ -85,6 +78,10 @@ def heuristic_score(text):
 def index():
     return render_template('index.html')
 
+@app.route('/advanced')
+def advanced():
+    return render_template('advanced.html')
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.json
@@ -103,7 +100,7 @@ def analyze():
         is_bad, reason = check_url_api(url)
         if is_bad:
             patterns.append(f"DANGEROUS URL: {url} ({reason})")
-            h_score = 100 # Instant 100% Risk
+            h_score = 100
     
     # 4. Final Decision
     is_spam = False
@@ -132,7 +129,6 @@ def open_browser():
     webbrowser.open_new("http://127.0.0.1:5000")
 
 if __name__ == '__main__':
-    # Stops double-opening
     if not os.environ.get("WERKZEUG_RUN_MAIN"):
         Timer(1.5, open_browser).start()
     app.run(debug=False)

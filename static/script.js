@@ -1,4 +1,11 @@
-﻿document.addEventListener("DOMContentLoaded", fetchHistory);
+﻿document.addEventListener("DOMContentLoaded", function() {
+    // Only fetch history if we are on the main page (optional, but good for performance)
+    // Or we can just let the advanced page handle history.
+    if(document.getElementById('historyList') && !document.getElementById('automataLog')) {
+        // If we are on a page with history but NOT logs (rare case with this setup, but safe)
+        fetchHistory();
+    }
+});
 
 async function scanMessage() {
     const message = document.getElementById('messageInput').value;
@@ -35,11 +42,8 @@ async function scanMessage() {
         document.getElementById('keywordsFound').innerText = data.patterns_found.length > 0 ? data.patterns_found.join(", ") : "None";
         document.getElementById('riskScore').innerText = data.heuristic_score + "%";
 
-        // Visualize Automata Steps
-        visualizeAutomata(data.automata_logs);
-
-        // Refresh History
-        fetchHistory();
+        // SAVE LOGS TO LOCAL STORAGE FOR THE ADVANCED PAGE
+        localStorage.setItem('lastScanLogs', JSON.stringify(data.automata_logs));
 
     } catch (error) {
         console.error("Error:", error);
@@ -47,8 +51,22 @@ async function scanMessage() {
     }
 }
 
+// Function called specifically by advanced.html
+function initAdvancedPage() {
+    fetchHistory();
+    
+    // Retrieve logs from the last scan
+    const storedLogs = localStorage.getItem('lastScanLogs');
+    if (storedLogs) {
+        const logs = JSON.parse(storedLogs);
+        visualizeAutomata(logs);
+    }
+}
+
 function visualizeAutomata(logs) {
     const container = document.getElementById('automataLog');
+    if (!container) return; // Guard clause in case function is called on index page
+
     container.innerHTML = ""; // Clear previous
 
     if (!logs || logs.length === 0) {
@@ -75,18 +93,17 @@ function visualizeAutomata(logs) {
         `;
         container.appendChild(div);
     });
-
-    // Auto scroll to bottom
-    container.scrollTop = container.scrollHeight;
 }
 
 async function fetchHistory() {
     try {
+        const list = document.getElementById('historyList');
+        if (!list) return; // Exit if element doesn't exist
+
         const response = await fetch('/history');
         if (!response.ok) return;
 
         const data = await response.json();
-        const list = document.getElementById('historyList');
         list.innerHTML = "";
 
         data.forEach(item => {

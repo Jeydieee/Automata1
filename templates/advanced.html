@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Results - States Against Spam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-project-diagram"></i> Advanced Analysis</h1>
+            <p>Automata Transitions & History</p>
+            
+            <a href="/" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Return to Scanner
+            </a>
+        </header>
+
+        <main class="dashboard" style="display: block; max-width: 800px; margin: 0 auto;">
+            <section class="viz-panel" style="width: 100%;">
+                <div class="card">
+                    <h2>Finite Automata State Transitions</h2>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Showing data from the most recent scan.</p>
+                    <div class="automata-viz" id="automataLog">
+                        <p class="placeholder-text">No recent scan data found. Go back and scan a message.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Recent Detections (Database)</h2>
+                    <ul id="historyList">
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Specific init for the advanced page
+        document.addEventListener("DOMContentLoaded", function() {
+            initAdvancedPage();
+        });
+    </script>
+</body>
+</html>
